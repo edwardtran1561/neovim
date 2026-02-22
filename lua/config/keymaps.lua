@@ -1,34 +1,33 @@
 local map = vim.keymap
 
-vim.g.mapleader = ' '
-vim.g.maplocalleader = '\\'
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
 
 -- Thoat search highlight
 map.set("n", "<Esc>", ":noh<CR>", {
-  silent = true,
-  noremap = true
+	silent = true,
+	noremap = true,
 })
 
 -- Thoat neovim va luu file
 map.set("n", "<leader>q", ":wq<CR>", {
-  silent = true,
-  noremap = true
+	silent = true,
+	noremap = true,
 })
 
 -- Tabs
 map.set("n", "<C-w>", ":bd<CR>", {
-  silent = true,
-  noremap = true
+	silent = true,
+	noremap = true,
 })
-
 
 -- Mo/Dong netwr
 map.set("n", "<leader>e", function()
-  if vim.bo.filetype == "netrw" then
-    vim.cmd("bd")
-  else
-    vim.cmd("Ex")
-  end
+	if vim.bo.filetype == "netrw" then
+		vim.cmd("bd")
+	else
+		vim.cmd("Ex")
+	end
 end, { desc = "Toggle netrw" })
 
 -- LSP Saga

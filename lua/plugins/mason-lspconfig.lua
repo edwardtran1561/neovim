@@ -5,14 +5,18 @@ return {
 		"mason-org/mason-lspconfig.nvim",
 		opts = function()
 			require("mason-lspconfig").setup({
-				automatic_enable = {
-					"lua_ls",
-					"ts_ls",
-					"jsonls",
-					"html",
-					"cssls",
+				opts = {
+					ensure_installed = {
+						"html",
+						"cssls",
+						"lua_ls",
+						"jsonls",
+						"ts_ls",
+					},
 				},
+				automatic_enable = true,
 			})
+			vim.lsp.inlay_hint.enable(true)
 			-- Setup
 			-- TS_LS
 			vim.lsp.config("ts_ls", {
@@ -24,37 +28,7 @@ return {
 					"typescriptreact",
 					"typescriptreact",
 				},
-				root_dir = function(bufnr)
-					return vim.fs.root(bufnr, {
-						"tsconfig.json",
-						"package.json",
-						".git",
-					})
-				end,
-				settings = {
-					typescript = {
-						inlayHints = {
-							includeInlayParameterNameHints = "all",
-							includeInlayFunctionLikeReturnTypeHints = true,
-							includeInlayVariableTypeHints = false,
-						},
-					},
-					javascript = {
-						inlayHints = {
-							includeInlayParameterNameHints = "all",
-						},
-					},
-				},
 			})
-			vim.api.nvim_create_autocmd("LspAttach", {
-				callback = function(args)
-					local client = vim.lsp.get_client_by_id(args.data.client_id)
-					if client.name == "ts_ls" then
-						client.server_capabilities.documentFormattingProvider = false
-					end
-				end,
-			})
-			vim.lsp.inlay_hint.enable(true)
 			-- HTML
 			vim.lsp.config("html", {
 				capabilities = capabilities,
@@ -81,9 +55,6 @@ return {
 				},
 			})
 		end,
-		dependencies = {
-			{ "mason-org/mason.nvim", opts = {} },
-			"neovim/nvim-lspconfig",
-		},
 	},
+	{ "neovim/nvim-lspconfig" },
 }
