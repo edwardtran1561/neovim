@@ -42,17 +42,5 @@ return {
 				additional_vim_regex_highlighting = false,
 			},
 		})
-		-- vim.api.nvim_create_autocmd("FileType", {
-		-- 	pattern = "javascriptreact",
-		-- 	callback = function(args)
-		-- 		vim.treesitter.start(args.buf, "javascript")
-		-- 	end,
-		-- })
-		-- vim.api.nvim_create_autocmd("FileType", {
-		-- 	pattern = "typescriptreact",
-		-- 	callback = function(args)
-		-- 		vim.treesitter.start(args.buf, "tsx")
-		-- 	end,
-		-- })
 	end,
 }

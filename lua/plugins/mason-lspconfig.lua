@@ -12,6 +12,7 @@ return {
 						"lua_ls",
 						"jsonls",
 						"ts_ls",
+						"tailwindcss",
 					},
 				},
 				automatic_enable = true,
