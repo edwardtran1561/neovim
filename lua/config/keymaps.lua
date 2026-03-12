@@ -16,6 +16,11 @@ map.set("n", "<C-w>", ":bd<CR>", {
 	desc = "Close tab",
 })
 
+map.set("n", "<C-h>", "<C-w>h", { desc = "Move left" })
+map.set("n", "<C-l>", "<C-w>l", { desc = "Move right" })
+map.set("n", "<C-j>", "<C-w>j", { desc = "Move down" })
+map.set("n", "<C-k>", "<C-w>k", { desc = "Move up" })
+
 -- Diagnostic
 map.set("n", "gl", vim.diagnostic.open_float, { desc = "Show line diagnostic (float)" })
 map.set("n", "<leader>xx", function()
@@ -50,6 +55,12 @@ map.set("n", "<leader>o", "<cmd>NvimTreeFocus<CR>", { desc = "Focus file tree" }
 
 -- Reveal current file
 map.set("n", "<leader>er", "<cmd>NvimTreeFindFile<CR>", { desc = "Reveal current file" })
+
+-- Toggle hidden files
+map.set("n", "th", function()
+	require("nvim-tree.api").tree.toggle_gitignore_filter()
+	require("nvim-tree.api").tree.toggle_hidden_filter()
+end)
 
 -- LSP Saga
 map.set("n", "K", "<cmd>Lspsaga hover_doc<CR>", { desc = "Hover docs" })
@@ -87,4 +98,30 @@ map.set("n", "]x", "<Plug>(git-conflict-next-conflict)", {
 
 map.set("n", "[x", "<Plug>(git-conflict-prev-conflict)", {
 	desc = "Conflict: Previous",
+})
+
+-- Toggleterm
+map.set("n", "<leader>tt", "<cmd>ToggleTerm<cr>", { desc = "Toggle Terminal" })
+
+-- Keyscreen
+map.set("n", "<leader>kt", function()
+	require("screenkey").toggle()
+end, { desc = "Toggle screenkey" })
+
+-- Resize window
+vim.keymap.set("n", "<A-h>", ":vertical resize -3<CR>", {
+	silent = true,
+	noremap = true,
+})
+vim.keymap.set("n", "<A-l>", ":vertical resize +3<CR>", {
+	silent = true,
+	noremap = true,
+})
+vim.keymap.set("n", "<A-k>", ":resize -3<CR>", {
+	silent = true,
+	noremap = true,
+})
+vim.keymap.set("n", "<A-j>", ":resize +3<CR>", {
+	silent = true,
+	noremap = true,
 })

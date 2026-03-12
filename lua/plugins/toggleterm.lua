@@ -3,7 +3,10 @@ return {
 	version = "*",
 	config = function()
 		require("toggleterm").setup({
-			direction = "float",
+			direction = "horizontal",
+			size = 20,
+			open_mapping = [[<c-\>]],
+			shade_terminals = true,
 		})
 
 		local Terminal = require("toggleterm.terminal").Terminal

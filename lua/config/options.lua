@@ -7,6 +7,7 @@ vim.opt.signcolumn = "yes"
 vim.cmd([[
   hi Directory guifg=#7aa2f7 gui=bold
 ]])
+vim.opt.equalalways = false
 
 -- Netwr
 -- Disable netwr for using nvim-tree

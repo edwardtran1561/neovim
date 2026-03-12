@@ -17,11 +17,23 @@ return {
 				},
 				automatic_enable = true,
 			})
+			vim.lsp.config("tailwindcss", {
+				filetypes = {
+					"html",
+					"css",
+					"scss",
+					"javascriptreact",
+					"typescriptreact",
+				},
+			})
 			vim.lsp.inlay_hint.enable(true)
 			-- Setup
 			-- TS_LS
 			vim.lsp.config("ts_ls", {
 				capabilities = capabilities,
+				flags = {
+					debounce_text_changes = 150,
+				},
 				cmd = { "typescript-language-server", "--stdio" },
 				filetypes = {
 					"javascript",

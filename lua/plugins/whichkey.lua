@@ -10,6 +10,8 @@ return {
 			{ "<leader>h", group = "Git blame & hunk handler" },
 			{ "<leader>x", group = "Diagnostics Handler" },
 			{ "<leader>c", group = "Git Conflict Handler" },
+			{ "<leader>t", group = "Terminal" },
+			{ "<leader>k", group = "Keyscreen" },
 		})
 	end,
 	keys = {
