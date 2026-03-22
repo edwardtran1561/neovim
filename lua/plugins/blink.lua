@@ -1,63 +1,87 @@
 return {
 	"saghen/blink.cmp",
-	-- optional: provides snippets for the snippet source
 	dependencies = { "rafamadriz/friendly-snippets" },
-
-	-- use a release tag to download pre-built binaries
 	version = "1.*",
-	-- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
-	-- build = 'cargo build --release',
-	-- If you use nix, you can build from source using latest nightly rust with:
-	-- build = 'nix run .#build-plugin',
 
 	---@module 'blink.cmp'
 	---@type blink.cmp.Config
 	opts = {
-		-- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
-		-- 'super-tab' for mappings similar to vscode (tab to accept)
-		-- 'enter' for enter to accept
-		-- 'none' for no mappings
-		--
-		-- All presets have the following mappings:
-		-- C-space: Open menu or open docs if already open
-		-- C-n/C-p or Up/Down: Select next/previous item
-		-- C-e: Hide menu
-		-- C-k: Toggle signature help (if signature.enabled = true)
-		--
-		-- See :h blink-cmp-config-keymap for defining your own keymap
+		-- ⌨️ Keymap tối ưu: Tab để chọn/nhảy snippet, Enter để chấp nhận
 		keymap = {
 			preset = "none",
-			["<S-Tab>"] = { "select_prev", "fallback" },
-			["<Tab>"] = { "select_next", "fallback" },
-			["<C-space>"] = {
+			["<CR>"] = { "accept", "fallback" },
+			["<Tab>"] = {
 				function(cmp)
-					cmp.show({ providers = { "snippets" } })
+					if cmp.is_snippet_active() then
+						return cmp.snippet_forward()
+					else
+						return cmp.select_next()
+					end
 				end,
+				"fallback",
 			},
+			["<S-Tab>"] = {
+				function(cmp)
+					if cmp.is_snippet_active() then
+						return cmp.snippet_backward()
+					else
+						return cmp.select_prev()
+					end
+				end,
+				"fallback",
+			},
+			["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
 			["<C-e>"] = { "hide", "fallback" },
-			["<CR>"] = { "select_and_accept", "fallback" },
+			["<C-b>"] = { "scroll_documentation_up", "fallback" },
+			["<C-f>"] = { "scroll_documentation_down", "fallback" },
 		},
 
 		appearance = {
-			-- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
-			-- Adjusts spacing to ensure icons are aligned
+			use_nvim_cmp_as_default = true, -- Giúp đồng bộ icon với nvim-cmp cũ
 			nerd_font_variant = "mono",
 		},
 
-		-- (Default) Only show the documentation popup when manually triggered
-		completion = { documentation = { auto_show = true } },
-
-		-- Default list of enabled providers defined so that you can extend it
-		-- elsewhere in your config, without redefining it, due to `opts_extend`
-		sources = {
-			default = { "lsp", "path", "snippets", "buffer" },
+		completion = {
+			-- Hiển thị menu hoàn thiện đẹp hơn (Bo góc chuẩn VS Code)
+			menu = {
+				border = "rounded",
+				draw = {
+					columns = {
+						{ "label", "label_description", gap = 1 },
+						{ "kind_icon", "kind" },
+					},
+				},
+			},
+			-- Tự động hiện tài liệu (documentation) khi chọn item
+			documentation = {
+				auto_show = true,
+				auto_show_delay_ms = 200,
+				window = { border = "rounded" },
+			},
+			-- Hiển thị gợi ý mờ (ghost text) khi đang gõ giống VS Code/Copilot
+			ghost_text = { enabled = true },
 		},
 
-		-- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
-		-- You may use a lua implementation instead by using `implementation = "lua"` or fallback to the lua implementation,
-		-- when the Rust fuzzy matcher is not available, by using `implementation = "prefer_rust"`
-		--
-		-- See the fuzzy documentation for more information
+		-- 🛠️ Nguồn gợi ý (Sources) - Đã FIX lỗi min_length
+		sources = {
+			default = { "lsp", "path", "snippets", "buffer" },
+			providers = {
+				lsp = {
+					name = "LSP",
+					module = "blink.cmp.sources.lsp",
+					score_offset = 100, -- Ưu tiên gợi ý từ LSP
+				},
+				snippets = {
+					score_offset = 80,
+				},
+				buffer = {
+					score_offset = 0,
+					min_keyword_length = 3, -- Sửa từ min_length để fix lỗi nvim báo đỏ
+				},
+			},
+		},
+
+		-- Engine tìm kiếm tối ưu bằng Rust
 		fuzzy = { implementation = "prefer_rust_with_warning" },
 	},
 	opts_extend = { "sources.default" },

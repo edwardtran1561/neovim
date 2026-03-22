@@ -1,127 +1,96 @@
-local map = vim.keymap
+local map = vim.keymap.set
+local opts = { noremap = true, silent = true }
 
+-- Thiết lập Leader key
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
--- Thoat search highlight
-map.set("n", "<Esc>", ":noh<CR>", {
-	silent = true,
-	noremap = true,
-})
+-- =============================================================================
+-- 🖥️ HỆ THỐNG & TIỆN ÍCH CHUNG (GENERAL)
+-- =============================================================================
+-- Chọn toàn bộ văn bản (ggVG)
+map("n", "<C-a>", "ggVG", opts)
 
--- Tabs
-map.set("n", "<C-w>", ":bd<CR>", {
-	silent = true,
-	noremap = true,
-	desc = "Close tab",
-})
+-- Lưu file nhanh (giống VS Code)
+map("n", "<C-s>", "<cmd>write<CR>", opts)
 
-map.set("n", "<C-h>", "<C-w>h", { desc = "Move left" })
-map.set("n", "<C-l>", "<C-w>l", { desc = "Move right" })
-map.set("n", "<C-j>", "<C-w>j", { desc = "Move down" })
-map.set("n", "<C-k>", "<C-w>k", { desc = "Move up" })
+-- Thoát highlight tìm kiếm bằng Esc
+map("n", "<Esc>", "<cmd>noh<CR>", opts)
 
--- Diagnostic
-map.set("n", "gl", vim.diagnostic.open_float, { desc = "Show line diagnostic (float)" })
-map.set("n", "<leader>xx", function()
-	require("trouble").toggle({
-		mode = "diagnostics",
-	})
-end, { desc = "Toggle diagnostics (workspace)" })
+-- Đóng buffer hiện tại (tương tự Close Tab)
+map("n", "<C-w>", "<cmd>bd<CR>", { desc = "Close current buffer" })
 
-map.set("n", "<leader>xr", function()
-	require("trouble").toggle({
-		mode = "lsp_references",
-	})
-end, { desc = "Show LSP References" })
+-- =============================================================================
+-- 🪟 ĐIỀU HƯỚNG & QUẢN LÝ CỬA SỔ (WINDOW MANAGEMENT)
+-- =============================================================================
+-- Di chuyển giữa các cửa sổ split (C-h,j,k,l)
+map("n", "<C-h>", "<C-w>h", { desc = "Move to left window" })
+map("n", "<C-l>", "<C-w>l", { desc = "Move to right window" })
+map("n", "<C-j>", "<C-w>j", { desc = "Move to bottom window" })
+map("n", "<C-k>", "<C-w>k", { desc = "Move to top window" })
 
-map.set("n", "<leader>xq", function()
-	require("trouble").toggle({
-		mode = "quickfix",
-	})
-end, { desc = "Toggle Quick Fix List" })
+-- Thay đổi kích thước cửa sổ (Alt + h,j,k,l)
+map("n", "<A-h>", "<cmd>vertical resize -3<CR>", opts)
+map("n", "<A-l>", "<cmd>vertical resize +3<CR>", opts)
+map("n", "<A-k>", "<cmd>resize -3<CR>", opts)
+map("n", "<A-j>", "<cmd>resize +3<CR>", opts)
 
-map.set("n", "<leader>xl", function()
-	require("trouble").toggle({
-		mode = "loclist",
-	})
-end, { desc = "Toggle Location List" })
+-- [Mới] Di chuyển dòng code lên/xuống (Visual Mode - Giống VS Code)
+map("v", "J", ":m '>+1<CR>gv=gv", opts)
+map("v", "K", ":m '<-2<CR>gv=gv", opts)
 
--- Nvim tree
-map.set("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file tree" })
+-- =============================================================================
+-- 📁 QUẢN LÝ FILE (NVIM-TREE)
+-- =============================================================================
+map("n", "<leader>e", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle Explorer" })
+map("n", "<leader>o", "<cmd>NvimTreeFocus<CR>", { desc = "Focus Explorer" })
+map("n", "<leader>er", "<cmd>NvimTreeFindFile<CR>", { desc = "Find current file in Tree" })
 
--- Focus tree
-map.set("n", "<leader>o", "<cmd>NvimTreeFocus<CR>", { desc = "Focus file tree" })
+-- Toggle file ẩn/gitignore nhanh
+map("n", "th", function()
+	local api = require("nvim-tree.api")
+	api.tree.toggle_gitignore_filter()
+	api.tree.toggle_hidden_filter()
+end, { desc = "Toggle hidden files" })
 
--- Reveal current file
-map.set("n", "<leader>er", "<cmd>NvimTreeFindFile<CR>", { desc = "Reveal current file" })
+-- =============================================================================
+-- 🚀 LSP & CHẨN ĐOÁN (LSP SAGA & DIAGNOSTICS)
+-- =============================================================================
+-- Sử dụng Lspsaga cho trải nghiệm UI hiện đại
+map("n", "K", "<cmd>Lspsaga hover_doc<CR>", { desc = "LSP: Hover Docs" })
+map("n", "gd", "<cmd>Lspsaga goto_definition<CR>", { desc = "LSP: Go to Definition" })
+map("n", "pd", "<cmd>Lspsaga peek_definition<CR>", { desc = "LSP: Peek Definition" })
+map("n", "gr", "<cmd>Lspsaga finder ref<CR>", { desc = "LSP: Finder (Ref/Def)" })
+map("n", "<leader>ca", "<cmd>Lspsaga code_action<CR>", { desc = "LSP: Code Action" })
+map("n", "<leader>rn", "<cmd>Lspsaga rename<CR>", { desc = "LSP: Rename" })
 
--- Toggle hidden files
-map.set("n", "th", function()
-	require("nvim-tree.api").tree.toggle_gitignore_filter()
-	require("nvim-tree.api").tree.toggle_hidden_filter()
-end)
+-- Diagnostic (Lỗi hệ thống)
+map("n", "gl", vim.diagnostic.open_float, { desc = "LSP: Show line diagnostic" })
 
--- LSP Saga
-map.set("n", "K", "<cmd>Lspsaga hover_doc<CR>", { desc = "Hover docs" })
-map.set("n", "pd", "<cmd>Lspsaga peek_definition<CR>", { desc = "Peek Definition" })
-map.set("n", "pr", "<cmd>Lspsaga peek_references<CR>", { desc = "Peek References" })
-map.set("n", "gd", "<cmd>Lspsaga goto_definition<CR>", { desc = "Go To Definition" })
-map.set("n", "gr", "<cmd>Lspsaga finder ref<CR>", { desc = "Find References" })
-map.set("n", "<leader>ca", "<cmd>Lspsaga code_action<CR>", { desc = "Code Action" })
-map.set("n", "<leader>rn", "<cmd>Lspsaga rename<CR>", { desc = "Rename" })
+-- =============================================================================
+-- 🔍 TÌM KIẾM & DANH SÁCH (TELESCOPE & TROUBLE)
+-- =============================================================================
+-- Telescope: Tìm file và tìm chữ
+map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Find files" })
+map("n", "<leader>fg", "<cmd>Telescope live_grep<cr>", { desc = "Live grep (Search text)" })
 
--- Telescope
-map.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Find files" })
-map.set("n", "<leader>fg", "<cmd>Telescope live_grep<cr>", { desc = "Find Grep" })
+-- Trouble: Quản lý danh sách lỗi tập trung
+map("n", "<leader>xx", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Trouble: Workspace Diagnostics" })
+map("n", "<leader>xq", "<cmd>Trouble qflist toggle<cr>", { desc = "Trouble: Quickfix List" })
 
--- ===== Conflict keymaps =====
-map.set("n", "<leader>co", "<Plug>(git-conflict-ours)", {
-	desc = "Conflict: Accept ours",
-})
+-- =============================================================================
+-- ⚔️ GIT CONFLICTS
+-- =============================================================================
+map("n", "<leader>co", "<Plug>(git-conflict-ours)", { desc = "Git: Keep Ours" })
+map("n", "<leader>ct", "<Plug>(git-conflict-theirs)", { desc = "Git: Keep Theirs" })
+map("n", "<leader>cb", "<Plug>(git-conflict-both)", { desc = "Git: Keep Both" })
+map("n", "]x", "<Plug>(git-conflict-next-conflict)", { desc = "Git: Next Conflict" })
+map("n", "[x", "<Plug>(git-conflict-prev-conflict)", { desc = "Git: Prev Conflict" })
 
-map.set("n", "<leader>ct", "<Plug>(git-conflict-theirs)", {
-	desc = "Conflict: Accept theirs",
-})
-
-map.set("n", "<leader>cb", "<Plug>(git-conflict-both)", {
-	desc = "Conflict: Accept both",
-})
-
-map.set("n", "<leader>c0", "<Plug>(git-conflict-none)", {
-	desc = "Conflict: Delete conflict",
-})
-
-map.set("n", "]x", "<Plug>(git-conflict-next-conflict)", {
-	desc = "Conflict: Next",
-})
-
-map.set("n", "[x", "<Plug>(git-conflict-prev-conflict)", {
-	desc = "Conflict: Previous",
-})
-
--- Toggleterm
-map.set("n", "<leader>tt", "<cmd>ToggleTerm<cr>", { desc = "Toggle Terminal" })
-
--- Keyscreen
-map.set("n", "<leader>kt", function()
+-- =============================================================================
+-- ⌨️ CÔNG CỤ KHÁC (TERMINAL, SCREENKEY)
+-- =============================================================================
+map("n", "<leader>tt", "<cmd>ToggleTerm<cr>", { desc = "Toggle Terminal" })
+map("n", "<leader>kt", function()
 	require("screenkey").toggle()
-end, { desc = "Toggle screenkey" })
-
--- Resize window
-vim.keymap.set("n", "<A-h>", ":vertical resize -3<CR>", {
-	silent = true,
-	noremap = true,
-})
-vim.keymap.set("n", "<A-l>", ":vertical resize +3<CR>", {
-	silent = true,
-	noremap = true,
-})
-vim.keymap.set("n", "<A-k>", ":resize -3<CR>", {
-	silent = true,
-	noremap = true,
-})
-vim.keymap.set("n", "<A-j>", ":resize +3<CR>", {
-	silent = true,
-	noremap = true,
-})
+end, { desc = "Toggle Screenkey" })

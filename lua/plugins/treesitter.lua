@@ -1,46 +1,50 @@
 return {
-	"nvim-treesitter/nvim-treesitter",
-	lazy = false,
-	branch = "master",
-	build = ":TSUpdate",
-	config = function()
-		require("nvim-treesitter.configs").setup({
-			modules = {},
-			-- A list of parser names, or "all" (the listed parsers MUST always be installed)
-			ensure_installed = {
-				"javascript",
-				"typescript",
-				"tsx",
-				"lua",
-				"json",
-				"html",
-				"css",
-			},
+  "nvim-treesitter/nvim-treesitter",
+  lazy = false,
+  branch = "master",
+  build = ":TSUpdate",
+  config = function()
+    require("nvim-treesitter.configs").setup({
+      modules = {},
+      -- 🚀 Bổ sung thêm Dart (Flutter) và Angular vào danh sách của bạn
+      ensure_installed = {
+        "javascript",
+        "typescript",
+        "tsx",
+        "lua",
+        "json",
+        "html",
+        "css",
+        "dart", -- Quan trọng cho Flutter
+        "angular", -- Quan trọng cho Angular
+        "scss",
+      },
 
-			-- Install parsers synchronously (only applied to `ensure_installed`)
-			sync_install = false,
+      sync_install = false,
+      auto_install = true,
+      ignore_install = {},
 
-			-- Automatically install missing parsers when entering buffer
-			-- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-			auto_install = true,
+      highlight = {
+        enable = true,
+        -- Giữ nguyên logic xử lý file lớn của bạn
+        disable = function(lang, buf)
+          local max_filesize = 100 * 1024 -- 100 KB
+          local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+          if ok and stats and stats.size > max_filesize then
+            return true
+          end
+        end,
+        -- Ép false để Treesitter nắm quyền highlight (giúp hiện màu xanh lá)
+        additional_vim_regex_highlighting = false,
+      },
 
-			-- List of parsers to ignore installing (or "all")
-			ignore_install = {},
+      -- Thêm thụt lề thông minh cho JSX/TSX và Flutter
+      indent = { enable = true },
+    })
 
-			---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
-			-- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!
-
-			highlight = {
-				enable = true,
-				disable = function(lang, buf)
-					local max_filesize = 100 * 1024 -- 100 KB
-					local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-					if ok and stats and stats.size > max_filesize then
-						return true
-					end
-				end,
-				additional_vim_regex_highlighting = false,
-			},
-		})
-	end,
+    -- 🔥 DÒNG QUAN TRỌNG NHẤT: Ép Neovim nhận diện đúng Parser cho React
+    -- Điều này giúp chữ 'Container' lấy lại màu xanh lá từ bộ giải mã TSX
+    vim.treesitter.language.register("tsx", "typescriptreact")
+    vim.treesitter.language.register("tsx", "javascriptreact")
+  end,
 }
