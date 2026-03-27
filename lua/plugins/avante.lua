@@ -1,0 +1,145 @@
+return {}
+-- return {
+--   "yetone/avante.nvim",
+--   event = "VeryLazy",
+--   lazy = false,
+--   version = false,
+--   build = "make",
+--   opts = {
+--     -- Mặc định dùng Haiku (nhanh + rẻ)
+--     provider = "claude-haiku",
+--
+--     -- Thêm phần này
+--     repo_map = {
+--       ignore_patterns = { "%.git", "node_modules", "%.next" },
+--     },
+--
+--     system_prompt = function()
+--       -- Tự động đọc AGENTS.md nếu tồn tại
+--       local cwd = vim.fn.getcwd()
+--       local agents_file = cwd .. "/AGENTS.md"
+--       local f = io.open(agents_file, "r")
+--       if f then
+--         local content = f:read("*all")
+--         f:close()
+--         return "You are an expert developer. Here is the project context:\n\n" .. content
+--       end
+--       return "You are an expert developer."
+--     end,
+--
+--     providers = {
+--       claude = {
+--         endpoint = "https://api.anthropic.com",
+--         model = "claude-sonnet-4-6",
+--         timeout = 30000,
+--         extra_request_body = {
+--           temperature = 0,
+--           max_tokens = 8096,
+--         },
+--       },
+--       ["claude-haiku"] = {
+--         __inherited_from = "claude",
+--         model = "claude-haiku-4-5-20251001",
+--         extra_request_body = {
+--           temperature = 0,
+--           max_tokens = 4096,
+--         },
+--       },
+--       ["claude-sonnet"] = {
+--         __inherited_from = "claude",
+--         model = "claude-sonnet-4-6",
+--         extra_request_body = {
+--           temperature = 0,
+--           max_tokens = 8096,
+--         },
+--       },
+--       gemini = {
+--         model = "gemini-2.0-flash-lite",
+--         api_key_name = "GEMINI_API_KEY",
+--         timeout = 30000,
+--         max_retries = 2,
+--         retry_delay = 5000,
+--       },
+--       ollama = {
+--         __inherited_from = "openai",
+--         api_key_name = "",
+--         endpoint = "http://127.0.0.1:11434/v1",
+--         model = "qwen2.5-coder:1.5b",
+--       },
+--     },
+--
+--     context = {
+--       enabled = true,
+--     },
+--
+--     behaviour = {
+--       auto_apply_diff = false,
+--       support_paste_from_clipboard = true,
+--     },
+--
+--     -- Enable markdown rendering in the avante panel
+--     ui = {
+--       enable = true,
+--       markdown = {
+--         enabled = true,
+--         render_mode = "block", -- or "inline"
+--       },
+--     },
+--
+--     -- Render markdown in the chat window
+--     render = {
+--       markdown = true,
+--       code = true,
+--     },
+--   },
+--   keys = {
+--     {
+--       "<leader>a1",
+--       function()
+--         require("avante.api").switch_provider("claude-haiku")
+--       end,
+--       desc = "Avante: Haiku (fast)",
+--     },
+--     {
+--       "<leader>a2",
+--       function()
+--         require("avante.api").switch_provider("claude-sonnet")
+--       end,
+--       desc = "Avante: Sonnet (smart)",
+--     },
+--   },
+--   dependencies = {
+--     {
+--       "stevearc/dressing.nvim",
+--       opts = {
+--         select = {
+--           enabled = true,
+--           backend = { "telescope", "builtin" },
+--         },
+--       },
+--     },
+--     "nvim-lua/plenary.nvim",
+--     "MunifTanjim/nui.nvim",
+--     "hrsh7th/nvim-cmp",
+--     "nvim-tree/nvim-web-devicons",
+--     {
+--       "HakonHarnes/img-clip.nvim",
+--       event = "VeryLazy",
+--       opts = {
+--         default = {
+--           embed_image_as_base64 = false,
+--           prompt_for_file_name = false,
+--           drag_and_drop = { insert_mode = true },
+--         },
+--       },
+--     },
+--     -- Add markdown rendering support
+--     {
+--       "MeanderingProgrammer/render-markdown.nvim",
+--       opts = {
+--         file_types = { "markdown", "Avante" },
+--       },
+--       ft = { "markdown", "Avante" },
+--     },
+--   },
+-- }

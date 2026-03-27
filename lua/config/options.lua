@@ -17,8 +17,13 @@ vim.opt.mouse = "a" -- Cho phép dùng chuột
 -- Ký tự phân cách UI (Làm sạch giao diện)
 vim.opt.fillchars = {
   eob = " ", -- Ẩn dấu ~ ở cuối file
-  vert = " ", -- Ẩn đường kẻ dọc mặc định
-  horiz = " ",
+  vert = "│", -- Đường kẻ dọc sắc nét
+  horiz = "─", -- 🔥 ĐƯỜNG KẺ NGANG (Sử dụng ký tự: ─)
+  horizup = "┴", -- Các ký tự góc nối (tùy chọn để đẹp hơn)
+  horizdown = "┬",
+  vertleft = "┤",
+  vertright = "├",
+  verthoriz = "┼",
   msgsep = "‾",
 }
 
@@ -64,7 +69,7 @@ vim.opt.autoread = true -- Tự động tải lại file nếu bị sửa bên n
 -- =============================================================================
 -- ⚡ HIỆU SUẤT & THỜI GIAN PHẢN HỒI (PERFORMANCE)
 -- =============================================================================
-vim.opt.updatetime = 250 -- Thời gian phản hồi (ms) cho các sự kiện
+vim.opt.updatetime = 200 -- Thời gian phản hồi (ms) cho các sự kiện
 vim.opt.timeoutlen = 400 -- Thời gian chờ phím tắt (combo key)
 vim.opt.ttimeoutlen = 10 -- Thời gian chờ phím đặc biệt (ESC...)
 vim.opt.redrawtime = 1500 -- Giới hạn thời gian vẽ lại UI (tránh lag)
@@ -99,13 +104,13 @@ vim.diagnostic.config({
   update_in_insert = false, -- Không báo lỗi khi đang gõ (tránh xao nhãng)
 })
 
--- Tự động hiện bảng thông báo lỗi khi di chuyển con trỏ (Hover)
 vim.api.nvim_create_autocmd("CursorHold", {
   callback = function()
     vim.diagnostic.open_float(nil, {
       focusable = false,
-      border = "rounded", -- Bo góc giống VS Code / Blink.cmp
-      source = "always", -- Hiện lỗi từ đâu (LSP, Linter...)
+      close_events = { "CursorMoved", "CursorMovedI", "BufHidden", "InsertCharPre" },
+      border = "rounded", -- Bo góc đồng bộ UI
+      source = "always", -- Hiện lỗi này từ đâu (LSP, Linter...)
       prefix = " ",
       scope = "cursor",
     })

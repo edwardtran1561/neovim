@@ -73,7 +73,7 @@ return {
     -- 🔥 ĐỒNG BỘ MÀU SẮC (ÉP MÀU CHO ĐỒNG BỘ THEME)
     local function sync_telescope_theme()
       local bg_code = "#0A0E12" -- Nền code tối sâu
-      local bg_tree = "#121510" -- Nền xanh rêu sáng (đồng bộ NvimTree)
+      local bg_tree = "#050505" -- Nền xanh rêu sáng (đồng bộ NvimTree)
 
       -- Viền và tiêu đề
       vim.api.nvim_set_hl(0, "TelescopeBorder", { fg = "#2A2D2E", bg = bg_code })

@@ -22,7 +22,6 @@ return {
     require("mini.tabline").setup({
       show_icons = true,
       set_vim_settings = true,
-      tabpage_section = "left",
     })
 
     -- 3. Setup Statusline (Thanh trạng thái dưới cùng)

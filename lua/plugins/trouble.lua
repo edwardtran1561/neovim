@@ -23,7 +23,7 @@ return {
 
     -- 🔥 BẢN FIX CUỐI CÙNG: SAN PHẲNG TOÀN BỘ UI TROUBLE
     local function sync_trouble_theme()
-      local bg_tree = "#121510" -- Màu rêu đồng bộ NvimTree
+      local bg_tree = "#050505" -- Màu rêu đồng bộ NvimTree
       local bg_active = "#1E232A" -- Màu highlight dòng chọn
 
       -- Danh sách tất cả các nhóm highlight "cứng đầu" nhất
